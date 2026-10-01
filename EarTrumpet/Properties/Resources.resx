@@ -737,4 +737,10 @@ Open [https://eartrumpet.app/jmp/fixfonts] now?</value>
   <data name="AboutSelfBuiltText" xml:space="preserve">
     <value>Self-compiled fork of upstream 2.3.0.0</value>
   </data>
+  <data name="AboutThisRepoText" xml:space="preserve">
+    <value>This build: YHuanheg/EarTrumpet</value>
+  </data>
+  <data name="AboutUpstreamRepoText" xml:space="preserve">
+    <value>Upstream project: File-New-Project/EarTrumpet</value>
+  </data>
 </root>

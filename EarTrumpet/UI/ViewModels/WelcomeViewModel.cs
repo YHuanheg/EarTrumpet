@@ -16,10 +16,13 @@ namespace EarTrumpet.UI.ViewModels
 
         // No "send crash data" opt-in here: this build reports nothing, so there is nothing to
         // ask about. See Diagnosis/ErrorReporter.cs.
+        //
+        // "Learn more" points at this fork: on first run the thing worth reading is what this
+        // build does differently, which upstream's page does not describe.
         public WelcomeViewModel()
         {
             Title = Properties.Resources.WelcomeDialogHeaderText;
-            LearnMore = new RelayCommand(() => ProcessHelper.StartNoThrow("https://github.com/File-New-Project/EarTrumpet"));
+            LearnMore = new RelayCommand(() => ProcessHelper.StartNoThrow("https://github.com/YHuanheg/EarTrumpet"));
         }
 
         public void OnClosing(object sender, System.ComponentModel.CancelEventArgs e)

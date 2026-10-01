@@ -8,8 +8,15 @@ namespace EarTrumpet.UI.ViewModels
 {
     class EarTrumpetAboutPageViewModel : SettingsPageViewModel
     {
+        /// <summary>This fork. The About page links here for "learn more", not to upstream.</summary>
+        private const string ThisRepoUrl = "https://github.com/YHuanheg/EarTrumpet";
+
+        /// <summary>The project this fork is built from. Linked separately, and where bug reports go.</summary>
+        private const string UpstreamUrl = "https://github.com/File-New-Project/EarTrumpet";
+
         public ICommand OpenDiagnosticsCommand { get; }
         public ICommand OpenAboutCommand { get; }
+        public ICommand OpenUpstreamCommand { get; }
         public ICommand OpenFeedbackCommand { get; }
         public string AboutText { get; }
 
@@ -24,7 +31,8 @@ namespace EarTrumpet.UI.ViewModels
             Title = Properties.Resources.AboutTitle;
             AboutText = $"EarTrumpet {App.PackageVersion}";
 
-            OpenAboutCommand = new RelayCommand(OpenAbout);
+            OpenAboutCommand = new RelayCommand(OpenThisRepo);
+            OpenUpstreamCommand = new RelayCommand(OpenUpstream);
             OpenDiagnosticsCommand = new RelayCommand(OpenDiagnostics);
             OpenFeedbackCommand = new RelayCommand(OpenGitHubIssueChooser);
         }
@@ -40,7 +48,12 @@ namespace EarTrumpet.UI.ViewModels
             _openDiagnostics.Invoke();
         }
 
-        private void OpenGitHubIssueChooser() => ProcessHelper.StartNoThrow("https://github.com/File-New-Project/EarTrumpet/issues/new/choose");
-        private void OpenAbout() => ProcessHelper.StartNoThrow("https://github.com/File-New-Project/EarTrumpet");
+        // "Learn more" belongs to this build: it is where the extra features are documented.
+        private void OpenThisRepo() => ProcessHelper.StartNoThrow(ThisRepoUrl);
+        private void OpenUpstream() => ProcessHelper.StartNoThrow(UpstreamUrl);
+
+        // Reports go upstream on purpose - this fork has no issue tracker, and the bulk of the
+        // code (and therefore most bugs) is theirs.
+        private void OpenGitHubIssueChooser() => ProcessHelper.StartNoThrow($"{UpstreamUrl}/issues/new/choose");
     }
 }

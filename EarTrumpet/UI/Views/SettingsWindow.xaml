@@ -343,8 +343,20 @@
                                    Text="{x:Static resx:Resources.AboutSelfBuiltText}" />
                         <!-- 原本这里有一个"发送崩溃数据"勾选框和隐私政策链接。
                              本版本不上报任何东西,所以删掉了(详见 Diagnosis/ErrorReporter.cs)。 -->
+                        <!-- 两个仓库都列出来:这是自编译分支,「了解更多」指向本分支的仓库,
+                             上游项目单独给一条,免得点进官网却找不到本版本的功能说明。 -->
                         <TextBlock Style="{StaticResource HyperlinkBlock}"><Hyperlink Command="{Binding OpenAboutCommand}">
                                 <Run Text="{x:Static resx:Resources.WebsiteText}" />
+                            </Hyperlink>
+                        </TextBlock>
+                        <TextBlock Style="{StaticResource HyperlinkBlock}">
+                            <Hyperlink Command="{Binding OpenAboutCommand}">
+                                <Run Text="{x:Static resx:Resources.AboutThisRepoText}" />
+                            </Hyperlink>
+                        </TextBlock>
+                        <TextBlock Style="{StaticResource HyperlinkBlock}">
+                            <Hyperlink Command="{Binding OpenUpstreamCommand}">
+                                <Run Text="{x:Static resx:Resources.AboutUpstreamRepoText}" />
                             </Hyperlink>
                         </TextBlock>
                         <TextBlock Style="{StaticResource HyperlinkBlock}">

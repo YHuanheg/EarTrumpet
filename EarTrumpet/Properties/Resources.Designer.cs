@@ -1922,5 +1922,23 @@ namespace EarTrumpet.Properties {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to This build: YHuanheg/EarTrumpet.
+        /// </summary>
+        public static string AboutThisRepoText {
+            get {
+                return ResourceManager.GetString("AboutThisRepoText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Upstream project: File-New-Project/EarTrumpet.
+        /// </summary>
+        public static string AboutUpstreamRepoText {
+            get {
+                return ResourceManager.GetString("AboutUpstreamRepoText", resourceCulture);
+            }
+        }
+        
     }
 }
