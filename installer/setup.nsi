@@ -25,7 +25,13 @@ Unicode true
   !define PAYLOAD "${__FILEDIR__}\..\Build\Release"
 !endif
 !ifndef APPVERSION
-  !define APPVERSION "2.3.0.136"
+  ; 故意用"一眼就知道不是真版本"的占位值,并且警告 ——
+  ; 以前这里写死的是 2.3.0.136,手工编译出来的安装包会自称 136:
+  ; 名字看不出问题,但它在「设置 → 应用」里登记的 DisplayVersion 是错的,
+  ; 也违背"每版版本号都要更新"。正式打包一律由 make-package.ps1 传 /DAPPVERSION
+  ; (它从编译产物的 ProductVersion 算出真实版本,并回写 MSIX 清单)。
+  !define APPVERSION "0.0.0.0"
+  !warning "APPVERSION 没传,用占位值 0.0.0.0。请改用 make-package.ps1 打包。"
 !endif
 !ifndef OUTFILE
   !define OUTFILE "${__FILEDIR__}\..\Build\Package\EarTrumpet-setup.exe"
