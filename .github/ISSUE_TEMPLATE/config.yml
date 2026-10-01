@@ -1,8 +1,8 @@
+# Issue 模板选择页的配置。
+#
+# 上游这里挂着两条跳转,分别指向上游的 Discussions(提想法 / 提问)。
+# 本仓库是自行编译的分支,而且**没有开 Discussions** —— 留着那两条等于把反馈
+# 又送去了上游,所以删掉。现在这一页的入口全部落在本仓库:
+#   * Bug report —— 用下面的 bug_report.yml 表单
+#   * 空 issue   —— blank_issues_enabled 打开了,功能建议/提问直接用空 issue 提
 blank_issues_enabled: true
-contact_links:
-  - name: Request a feature
-    url: https://github.com/File-New-Project/EarTrumpet/discussions/new?category=ideas
-    about: Share an idea or suggest a change to EarTrumpet or related add-on
-  - name: Ask a question
-    url: https://github.com/File-New-Project/EarTrumpet/discussions/new?category=Q-A
-    about: Ask a question about EarTrumpet or anything related

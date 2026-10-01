@@ -52,8 +52,9 @@ namespace EarTrumpet.UI.ViewModels
         private void OpenThisRepo() => ProcessHelper.StartNoThrow(ThisRepoUrl);
         private void OpenUpstream() => ProcessHelper.StartNoThrow(UpstreamUrl);
 
-        // Reports go upstream on purpose - this fork has no issue tracker, and the bulk of the
-        // code (and therefore most bugs) is theirs.
-        private void OpenGitHubIssueChooser() => ProcessHelper.StartNoThrow($"{UpstreamUrl}/issues/new/choose");
+        // Feedback goes to this fork's own tracker. Its Issues were enabled for exactly this,
+        // and .github/ISSUE_TEMPLATE/config.yml no longer offers upstream's discussions, so
+        // every entry on that page lands here.
+        private void OpenGitHubIssueChooser() => ProcessHelper.StartNoThrow($"{ThisRepoUrl}/issues/new/choose");
     }
 }
