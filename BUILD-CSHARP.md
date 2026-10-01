@@ -376,6 +376,79 @@ EarTrumpet.exe --volume-osd-preview 50 --dark     # 强制深色
 * 描边比原生**略强**(原生实测约 6–8%,这里用 12%):原生那条边在浅色背景上几乎看不见,
   而"看得见轮廓"正是加它的目的。嫌重就把 `VolumeOsdViewModel` 里的 `LightBorder` / `DarkBorder` 调低。
 
+## 这个版本不上报任何数据
+
+上游会把崩溃报告经 Bugsnag 上传到 EarTrumpet 项目,由一个"发送崩溃数据"开关控制。
+本版本**整条链路都去掉了**:
+
+* `Diagnosis/ErrorReporter.cs` 不再创建 Bugsnag 客户端,只保留本机诊断用的 trace 缓冲
+  (「Troubleshoot」按钮读的就是它,内容只在内存里,由用户自己决定要不要看);
+* `AppSettings.IsTelemetryEnabled` 及其默认值(那个区分欧盟地区的国家名单)一并删除;
+* `App.config` 里的 `bugsnag` 配置节和 `<bugsnag apiKey=…>`(上游的 key)删除 ——
+  **留着是个雷**:配置节声明了处理器却把 DLL 删掉,任何读取配置的代码都会抛异常;
+* `EarTrumpet.csproj` / `packages.config` 里的 Bugsnag 依赖删除,产物体积也随之变小;
+* 关于页与欢迎页的"发送崩溃数据"勾选框、以及指向上游隐私政策的链接都删掉 ——
+  **不上报却留着开关,比没有开关更糟**。
+
+改这几处时注意:`Build\Release` 里的 `Bugsnag*.dll/xml` 是上一次构建留下的,**MSBuild 不会自动删**,
+必须手动清掉,否则它们还会被打进三种包里。
+
+## 版本号从哪来 / 安装时程序正在运行怎么办
+
+### 版本号
+
+链条是:`git` 提交 → GitVersion → 程序集版本 → `make-package.ps1` 读取 → 回写 MSIX 清单并给产物命名。
+
+* **末位 = 距上个 tag 的提交数。** `git describe` 是 `2.3.0.0-139-gb467c67f` → 版本 `2.3.0.139`。
+  所以**交付新版本必须提交**;一直不提交的话每版都叫同一个号。
+* **这不只是命名问题:MSIX 升级要求新包版本号更大。** 同号的新包装不上去。
+* **别读 `FileVersion`。** GitVersion 的 `assembly-versioning-scheme: MajorMinorPatchTag` 让它
+  **恒为 `x.y.z.0`**;提交数只在 **`ProductVersion`**(`2.3.0-ci.139+Branch.master.Sha.…`)里。
+  读错字段会往清单里写一个**比已装版本还小**的号,升级直接被拒。
+* 步骤 0.5 会自动同步;版本没变大时会打黄色警告。
+* `installer/setup.nsi` 的 `APPVERSION` 默认值是**占位的 `0.0.0.0` + 编译期警告** ——
+  以前写死 `2.3.0.136`,手工编译会得到一个"自称 136"的安装包(还会把错的版本写进
+  「设置 → 应用」的 DisplayVersion)。正式打包一律由 `make-package.ps1` 传进来。
+
+### 安装/卸载时程序正在运行
+
+`installer/check-file-in-use.nsh` 提供两个共用宏。`CHECK_FILE_IN_USE` 返回四种状态:
+
+| `$RES` | 含义 | 怎么判出来的 |
+|---|---|---|
+| `FREE` | 可以替换 | 以 **写**方式 + `share=0` 能打开 |
+| `INUSE` | 被占用(通常是程序在跑) | 打不开,且**同名进程在跑** |
+| `LOCKED` | 不可写但没人占着(权限/只读) | 打不开,且没有同名进程 |
+| `MISSING` | 文件不存在(首次安装) | `FileExists` 为假 |
+
+安装段与卸载段都是:检测 → `INUSE` 就弹框问"是否现在结束 EarTrumpet" → 同意则
+**先礼后兵**(`taskkill` 不带 `/F`,让它有机会把设置写完;没退再 `/F`)→ 复检 → 还在才放弃。
+`LOCKED` 单独给一条提示(结束进程解决不了权限问题,别让人白折腾)。
+
+> **血案(2026-10-01)**:这个检测以前用 `GENERIC_READ + share=0`,以为"独占读"能撞上占用。
+> 实测**对正在运行的 exe 也能打开成功** —— 映像的读权限本来就是共享的 —— 于是恒返回 `FREE`,
+> **占用检测从写出来那天起就没生效过**,安装程序会直接覆盖正在运行的程序。
+> 判断"能不能覆盖它"就必须按**写**去要权限。
+>
+> 另外 `GetLastError` 在这里没用:`System::Call` 经由内部消息实现,`CreateFileW` 与
+> `GetLastError` 两次调用之间最后错误已经被冲掉(Python 直接测得 err=32,NSIS 里取回来却是 0)。
+> 所以用"进程在不在跑"来区分 `INUSE` / `LOCKED`。
+
+### 怎么验证安装器(不真的装一遍)
+
+`.workbuddy/tmp/detect-probe.py` / `test-close-probe.py` 会 `!include` 同一份 `.nsh`,
+编译成静默探针跑真实逻辑。注意:
+
+* 目标用**替身进程**(把 `EarTrumpet.exe` 复制一份改名再跑),不碰你正在用的那份;
+* 宏里定义了 `ET_SILENT_CLOSE` 时跳过询问,直接跑结束分支 —— 覆盖到的就是真正会执行的代码;
+* `makensis` 对**含非 ASCII 的 .nsi 要求 UTF-8 BOM**,否则报 `Bad text encoding`;
+* 从 Git Bash 调 `makensis /D...` 参数会被当成路径转换,**用 Python subprocess 调**。
+
+### 复现校验要传同一套 `/D`
+
+验证"这份 setup.exe 就是当前脚本编的"时,必须把 `PAYLOAD` / `APPVERSION` / `APPICON`
+原样传上,否则产物必然不同 —— 我第一次就是这么误判成"不可复现"的。
+
 ## 怎么用（早期章节，保留）
 
 双击仓库根目录的 **`build-release.bat`**，或在 PowerShell 里直接运行它：

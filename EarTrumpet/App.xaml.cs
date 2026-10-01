@@ -63,7 +63,7 @@ namespace EarTrumpet
             PackageName = PackageHelper.GetFamilyName(HasIdentity);
 
             Settings = new AppSettings();
-            _errorReporter = new ErrorReporter(Settings);
+            _errorReporter = new ErrorReporter();
 
             if (SingleInstanceAppMutex.TakeExclusivity())
             {
@@ -241,7 +241,7 @@ namespace EarTrumpet
                 Trace.WriteLine($"App DisplayFirstRunExperience Showing welcome dialog");
                 Settings.HasShownFirstRun = true;
 
-                var dialog = new DialogWindow { DataContext = new WelcomeViewModel(Settings) };
+                var dialog = new DialogWindow { DataContext = new WelcomeViewModel() };
                 dialog.Show();
                 dialog.RaiseWindow();
             }
@@ -347,7 +347,7 @@ namespace EarTrumpet
                         new EarTrumpetDeviceSettingsPageViewModel(_bluetoothVolumeMemory),
                         new EarTrumpetCommunitySettingsPageViewModel(Settings),
                         new EarTrumpetLegacySettingsPageViewModel(Settings),
-                        new EarTrumpetAboutPageViewModel(() => _errorReporter.DisplayDiagnosticData(), Settings)
+                        new EarTrumpetAboutPageViewModel(() => _errorReporter.DisplayDiagnosticData())
                     });
 
             var allCategories = new List<SettingsCategoryViewModel>();

@@ -1913,5 +1913,14 @@ namespace EarTrumpet.Properties {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to Self-compiled fork of upstream 2.3.0.0.
+        /// </summary>
+        public static string AboutSelfBuiltText {
+            get {
+                return ResourceManager.GetString("AboutSelfBuiltText", resourceCulture);
+            }
+        }
+        
     }
 }

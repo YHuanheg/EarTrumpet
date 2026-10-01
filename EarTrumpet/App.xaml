@@ -2180,16 +2180,10 @@
                                    HorizontalAlignment="Left"
                                    gif:AnimationBehavior.SourceUri="pack://application:,,,/EarTrumpet;component/Assets/Welcome.gif"
                                    gif:AnimationBehavior.RepeatBehavior="Forever" />
-                            <CheckBox Margin="0,20,12,-6"
-                                        HorizontalAlignment="Left"
-                                        Content="{x:Static resx:Resources.PrivacyCheckboxText}"
-                                        IsChecked="{Binding IsTelemetryEnabled, Mode=TwoWay}" />
-                            <TextBlock Margin="0,12,12,6" Style="{StaticResource HyperlinkBlock}">
-                                <Hyperlink Command="{Binding OpenPrivacy}">
-                                    <Run Text="{x:Static resx:Resources.PrivacyPolicyText}" />
-                                </Hyperlink>
-                            </TextBlock>
-                            <TextBlock Margin="0,12,12,0" Style="{StaticResource HyperlinkBlock}">
+                            <!-- 这里原本有一个"发送崩溃数据"的勾选框和隐私政策链接。
+                                 本版本不上报任何东西,所以两者都删掉了 —— 留着会让人以为
+                                 有数据外发(详见 Diagnosis/ErrorReporter.cs)。 -->
+                            <TextBlock Margin="0,20,12,0" Style="{StaticResource HyperlinkBlock}">
                                 <Hyperlink Command="{Binding LearnMore}">
                                     <Run Text="{x:Static resx:Resources.WebsiteText}" />
                                 </Hyperlink>

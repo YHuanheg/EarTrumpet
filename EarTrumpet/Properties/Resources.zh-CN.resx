@@ -734,4 +734,7 @@
   <data name="SettingsRememberedDeviceForgetText" xml:space="preserve">
     <value>忘记此设备</value>
   </data>
+  <data name="AboutSelfBuiltText" xml:space="preserve">
+    <value>自行编译版本(基于官方 2.3.0.0)</value>
+  </data>
 </root>

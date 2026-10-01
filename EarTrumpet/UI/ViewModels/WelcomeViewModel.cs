@@ -10,24 +10,16 @@ namespace EarTrumpet.UI.ViewModels
         public string VisibleTitle => ""; // We have a header instead
         public string Title { get; } // Used for the window title.
         public ICommand LearnMore { get; }
-        public ICommand OpenPrivacy { get; }
         public ICommand DisplaySettingsChanged { get; }
 
-        public bool IsTelemetryEnabled
-        {
-            get => _settings.IsTelemetryEnabled;
-            set => _settings.IsTelemetryEnabled = value;
-        }
-
-        private readonly AppSettings _settings;
         private WindowViewState _state;
 
-        public WelcomeViewModel(AppSettings settings)
+        // No "send crash data" opt-in here: this build reports nothing, so there is nothing to
+        // ask about. See Diagnosis/ErrorReporter.cs.
+        public WelcomeViewModel()
         {
-            _settings = settings;
             Title = Properties.Resources.WelcomeDialogHeaderText;
             LearnMore = new RelayCommand(() => ProcessHelper.StartNoThrow("https://github.com/File-New-Project/EarTrumpet"));
-            OpenPrivacy = new RelayCommand(() => ProcessHelper.StartNoThrow("https://github.com/File-New-Project/EarTrumpet/blob/master/PRIVACY.md"));
         }
 
         public void OnClosing(object sender, System.ComponentModel.CancelEventArgs e)

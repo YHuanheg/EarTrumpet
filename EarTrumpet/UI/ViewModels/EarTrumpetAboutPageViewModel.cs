@@ -11,21 +11,14 @@ namespace EarTrumpet.UI.ViewModels
         public ICommand OpenDiagnosticsCommand { get; }
         public ICommand OpenAboutCommand { get; }
         public ICommand OpenFeedbackCommand { get; }
-        public ICommand OpenPrivacyPolicyCommand { get; }
         public string AboutText { get; }
 
-        public bool IsTelemetryEnabled
-        {
-            get => _settings.IsTelemetryEnabled;
-            set => _settings.IsTelemetryEnabled = value;
-        }
-
         private readonly Action _openDiagnostics;
-        private readonly AppSettings _settings;
 
-        public EarTrumpetAboutPageViewModel(Action openDiagnostics, AppSettings settings) : base(null)
+        // No telemetry opt-in and no privacy-policy link: this build never reports anything,
+        // so both would be describing something that does not happen. See ErrorReporter.cs.
+        public EarTrumpetAboutPageViewModel(Action openDiagnostics) : base(null)
         {
-            _settings = settings;
             _openDiagnostics = openDiagnostics;
             Glyph = "\xE946";
             Title = Properties.Resources.AboutTitle;
@@ -34,7 +27,6 @@ namespace EarTrumpet.UI.ViewModels
             OpenAboutCommand = new RelayCommand(OpenAbout);
             OpenDiagnosticsCommand = new RelayCommand(OpenDiagnostics);
             OpenFeedbackCommand = new RelayCommand(OpenGitHubIssueChooser);
-            OpenPrivacyPolicyCommand = new RelayCommand(OpenPrivacyPolicy);
         }
 
         private void OpenDiagnostics()
@@ -50,6 +42,5 @@ namespace EarTrumpet.UI.ViewModels
 
         private void OpenGitHubIssueChooser() => ProcessHelper.StartNoThrow("https://github.com/File-New-Project/EarTrumpet/issues/new/choose");
         private void OpenAbout() => ProcessHelper.StartNoThrow("https://github.com/File-New-Project/EarTrumpet");
-        private void OpenPrivacyPolicy() => ProcessHelper.StartNoThrow("https://github.com/File-New-Project/EarTrumpet/blob/master/PRIVACY.md");
     }
 }

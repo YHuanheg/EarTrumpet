@@ -734,4 +734,7 @@ Open [https://eartrumpet.app/jmp/fixfonts] now?</value>
   <data name="SettingsRememberedDeviceForgetText" xml:space="preserve">
     <value>Forget this device</value>
   </data>
+  <data name="AboutSelfBuiltText" xml:space="preserve">
+    <value>Self-compiled fork of upstream 2.3.0.0</value>
+  </data>
 </root>
