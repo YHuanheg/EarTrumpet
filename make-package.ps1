@@ -267,13 +267,16 @@ Write-Host @"
   *.setup.exe  —— 传统向导式安装(推荐):双击 -> 下一步 -> 选择目录 -> 完成
                   装在 %LOCALAPPDATA%\Programs\EarTrumpet,不需要管理员;
                   会在开始菜单和「设置 → 应用」里登记,带卸载器。
-  *.msix       —— 系统原生安装界面,能直接更新已装的商店版(需先信任证书)
+  *.msix       —— 系统原生安装界面;身份是本分支自己的,所以与官方版**并列安装**
+                  (不是"官方版的更新"),需要先信任证书
   *-portable-* —— 免安装,解压即用
 "@
 Write-Host ""
 Write-Host "安装 MSIX 之前(只需做一次):" -ForegroundColor Yellow
-Write-Host "  1. 先从托盘右键退出正在运行的 EarTrumpet(更新时程序占着文件会失败)"
-Write-Host "  2. 信任随包导出的证书(不需要管理员):"
+Write-Host "  1. 如果之前装过本分支的 MSIX,先从托盘右键退出 EarTrumpet(更新时程序占着文件会失败);"
+Write-Host "     如果装的是**旧身份**(发布者 CN=6099D0EF-…)的本分支包或官方版,请先卸载它,"
+Write-Host "     否则会出现两个 EarTrumpet —— 换了发布者名就是两个不同的应用。"
+Write-Host "  2. 信任随包导出的证书(不需要管理员)。**换了发布者名就要重新信任**:"
 Write-Host "     Import-Certificate -FilePath `"$outDir\eartrumpet-local.cer`" -CertStoreLocation Cert:\CurrentUser\TrustedPeople"
 Write-Host "  3. 双击 .msix —— 会弹出 Windows 的原生安装界面"
 Write-Host "  回滚:Get-AppxPackage *EarTrumpet* | Remove-AppxPackage 之后重新安装官方版"
