@@ -22,7 +22,12 @@
     <TargetPlatformVersion>10.0.14393.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.14393.0</TargetPlatformMinVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
-    <PackageCertificateKeyFile>EarTrumpet.Package_StoreKey.pfx</PackageCertificateKeyFile>
+    <!--
+      上游这里指向 EarTrumpet.Package_StoreKey.pfx —— 他们提交商店用的签名私钥。
+      本分支不用它:那份密钥属于上游账号,而且**不应该存在于任何仓库里**,
+      所以文件已从本仓库删除,这一行也随之去掉。
+      本分支的 MSIX 由 make-package.ps1 用打包时生成的自签证书签名,见 BUILD-CSHARP.md。
+    -->
     <EntryPointProjectUniqueName>..\EarTrumpet\EarTrumpet.csproj</EntryPointProjectUniqueName>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
@@ -47,7 +52,6 @@
     <ProjectReference Include="..\EarTrumpet\EarTrumpet.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="EarTrumpet.Package_StoreKey.pfx" />
     <None Include="Package.xml" />
     <None Include="Package.StoreAssociation.xml" />
   </ItemGroup>
