@@ -51,14 +51,12 @@
   <ItemGroup>
     <ProjectReference Include="..\EarTrumpet\EarTrumpet.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Package.xml" />
-    <!--
-      上游这里还有 Package.StoreAssociation.xml —— 把工程与商店账号关联起来的文件
-      (内容就是上游的发布者身份和历史提交记录)。本分支不往商店发布、身份也已换成本分支自己的,
-      所以删掉了。日后要在 Visual Studio 里"将应用与商店关联",重新关联一次就会重新生成它。
-    -->
-  </ItemGroup>
+  <!--
+    上游在这里列出两份"工程 ↔ 商店账号"的关联文件:Package.xml 与 Package.StoreAssociation.xml。
+    两份的内容都是上游的发布者身份与包名(CN=6099D0EF-… / 40459File-New-Project.EarTrumpet)。
+    本分支不往商店发布、身份也已换成本分支自己的,所以两份都删掉了。
+    日后要在 Visual Studio 里"将应用与应用商店关联",重新关联一次就会重新生成它们。
+  -->
   <ItemGroup>
     <Content Include="Assets\LargeTile.scale-100.png" />
     <Content Include="Assets\LargeTile.scale-125.png" />

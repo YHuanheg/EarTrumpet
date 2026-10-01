@@ -9,7 +9,7 @@
       * 签名用与 Publisher 同名(CN=YHuanheg)的自签证书,由 make-package.ps1 自动生成;
         换了发布者名就**要重新信任**新证书(旧证书是给旧发布者名的)。
   -->
-  <Identity Name="YHuanheg.EarTrumpet" ProcessorArchitecture="x86" Publisher="CN=YHuanheg" Version="2.3.0.146" />
+  <Identity Name="YHuanheg.EarTrumpet" ProcessorArchitecture="x86" Publisher="CN=YHuanheg" Version="2.3.0.147" />
   <Properties>
     <DisplayName>EarTrumpet</DisplayName>
     <PublisherDisplayName>YHuanheg</PublisherDisplayName>
