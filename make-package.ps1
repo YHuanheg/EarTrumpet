@@ -56,11 +56,18 @@ if ($LASTEXITCODE -ne 0) { throw "本地化校验未通过 —— 拒绝打包(�
 #   ① 包名、exe 属性、「设置 → 应用」里显示的版本号必须是同一个,写死清单就会各说各话;
 #   ② **MSIX 升级要求新包版本号更大**,清单写死的话每版都是同一个号,新版根本装不上。
 Write-Host "== 0.5) 同步版本号 ==" -ForegroundColor Cyan
-$exeVersion = (Get-Item (Join-Path $release "EarTrumpet.exe")).VersionInfo.FileVersion
-if ($exeVersion -notmatch '^\d+\.\d+\.\d+\.\d+$') {
-    throw "从 EarTrumpet.exe 读到的版本号不可用:'$exeVersion'(期望四段数字)"
+# 注意读的是 ProductVersion,不是 FileVersion:GitVersion 的 assembly-versioning-scheme
+# 是 MajorMinorPatchTag,FileVersion 恒为 x.y.z.0,提交数只出现在 ProductVersion 里
+# (形如 2.3.0-ci.137+Branch.master.Sha.…)。读 FileVersion 会得到 2.3.0.0 ——
+# 比已安装的版本还小,MSIX 会直接拒绝升级。
+$productVersion = (Get-Item (Join-Path $release "EarTrumpet.exe")).VersionInfo.ProductVersion
+$head = ($productVersion -split '\+')[0]
+$nums = @([regex]::Matches($head, '\d+') | ForEach-Object { [int]$_.Value })
+if ($nums.Count -lt 3) {
+    throw "从 ProductVersion 解析不出版本号:'$productVersion'"
 }
-$version = $exeVersion
+$build = if ($nums.Count -ge 4) { $nums[3] } else { 0 }
+$version = "$($nums[0]).$($nums[1]).$($nums[2]).$build"
 $manifestPath = Join-Path $packageProject "Package.appxmanifest"
 $manifest = Get-Content $manifestPath -Raw -Encoding UTF8
 $manifestVersion = [regex]::Match($manifest, '<Identity[^>]*Version="([^"]+)"').Groups[1].Value

@@ -100,10 +100,15 @@ Section "EarTrumpet 主程序(必需)" SEC_MAIN
 
   ; 程序正在运行时覆盖它的 exe 会失败,留下半新半旧的文件。
   ; 先检测,检测到就问用户要不要结束它(而不是直接把人挡回去);用户拒绝才放弃。
-  !insertmacro CHECK_FILE_IN_USE "$INSTDIR\EarTrumpet.exe"
+  !insertmacro CHECK_FILE_IN_USE "$INSTDIR\EarTrumpet.exe" "EarTrumpet.exe"
   !insertmacro CLOSE_APP_IF_IN_USE "$INSTDIR\EarTrumpet.exe" "EarTrumpet.exe" "EarTrumpet" INS
   ${If} $RES == "INUSE"
     MessageBox MB_ICONSTOP|MB_OK "EarTrumpet 仍在运行,无法替换它的文件。$\r$\n$\r$\n请先在托盘图标上右键 → 「退出」,然后重新运行本安装程序。"
+    Abort
+  ${EndIf}
+  ; 不可写但不是被占用(多半是权限)。跟上面分开报 —— 结束进程解决不了这种,别让人白折腾。
+  ${If} $RES == "LOCKED"
+    MessageBox MB_ICONSTOP|MB_OK "无法写入 $INSTDIR\EarTrumpet.exe(没有写权限,或文件被设为只读)。$\r$\n$\r$\n请换一个安装目录,或以管理员身份运行本安装程序。"
     Abort
   ${EndIf}
 
@@ -169,10 +174,14 @@ Section "Uninstall"
   ; (EarTrumpet 没有命令行退出参数,所以不能靠 ExecWait 让它自己退。)
   ; 不用 Rename 试探:Windows 允许重命名正在运行的 exe(映像以 FILE_SHARE_DELETE 打开),
   ; 那个判断会漏报。
-  !insertmacro CHECK_FILE_IN_USE "$INSTDIR\EarTrumpet.exe"
+  !insertmacro CHECK_FILE_IN_USE "$INSTDIR\EarTrumpet.exe" "EarTrumpet.exe"
   !insertmacro CLOSE_APP_IF_IN_USE "$INSTDIR\EarTrumpet.exe" "EarTrumpet.exe" "EarTrumpet" UN
   ${If} $RES == "INUSE"
     MessageBox MB_ICONSTOP|MB_OK "EarTrumpet 仍在运行,无法删除它的文件。$\r$\n$\r$\n请先在托盘图标上右键 → 「退出」,然后重新运行卸载程序。"
+    Abort
+  ${EndIf}
+  ${If} $RES == "LOCKED"
+    MessageBox MB_ICONSTOP|MB_OK "无法删除 $INSTDIR\EarTrumpet.exe(没有写权限,或文件被设为只读)。$\r$\n$\r$\n请以管理员身份运行卸载程序,或手动删除该目录。"
     Abort
   ${EndIf}
 
