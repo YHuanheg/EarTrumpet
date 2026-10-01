@@ -7,8 +7,9 @@
     先用 build-release.bat 编译,再跑这个脚本。
 
     * MSIX:手工组装布局(目录清单 + 图标 + 程序),用 Windows SDK 的 makeappx 打包,
-      然后用自签名证书签名。清单里的身份与发布者保持原样,所以装上去会被 Windows
-      当作"更新"—— 直接替换掉已安装的官方 EarTrumpet;若想并列安装,自行改 Identity。
+      然后用自签名证书签名。清单里的身份/发布者是**本分支自己的**(YHuanheg.EarTrumpet /
+      CN=YHuanheg),所以装上去和官方版是**并列**关系,不会覆盖官方版 ——
+      机器上若还装着官方版或旧身份的本分支包,需要先卸载。
     * 便携版 zip:把同一份产物压成免安装包,附一份中文说明。
 
 .PARAMETER CertThumbprint

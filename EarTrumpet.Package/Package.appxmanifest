@@ -1,9 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities" xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10" IgnorableNamespaces="uap mp rescap desktop">
-  <Identity Name="40459File-New-Project.EarTrumpet" ProcessorArchitecture="x86" Publisher="CN=6099D0EF-9374-47ED-BDFE-A82136831235" Version="2.3.0.144" />
+  <!--
+    身份改成本分支自己的。上游用的是商店分配的身份(Name 以他们的发布者 ID 40459 开头,
+    Publisher 是他们的发布者证书),照搬会让本分支的包**冒充上游的发布者**。
+    改掉之后:
+      * 装上去是**并列**的一个应用,不再是"官方版的更新" —— 机器上如果还装着官方版或
+        旧身份的包,需要先卸载,否则会出现两个 EarTrumpet;
+      * 签名用与 Publisher 同名(CN=YHuanheg)的自签证书,由 make-package.ps1 自动生成;
+        换了发布者名就**要重新信任**新证书(旧证书是给旧发布者名的)。
+  -->
+  <Identity Name="YHuanheg.EarTrumpet" ProcessorArchitecture="x86" Publisher="CN=YHuanheg" Version="2.3.0.144" />
   <Properties>
     <DisplayName>EarTrumpet</DisplayName>
-    <PublisherDisplayName>File-New-Project</PublisherDisplayName>
+    <PublisherDisplayName>YHuanheg</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>

@@ -53,7 +53,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Package.xml" />
-    <None Include="Package.StoreAssociation.xml" />
+    <!--
+      上游这里还有 Package.StoreAssociation.xml —— 把工程与商店账号关联起来的文件
+      (内容就是上游的发布者身份和历史提交记录)。本分支不往商店发布、身份也已换成本分支自己的,
+      所以删掉了。日后要在 Visual Studio 里"将应用与商店关联",重新关联一次就会重新生成它。
+    -->
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\LargeTile.scale-100.png" />

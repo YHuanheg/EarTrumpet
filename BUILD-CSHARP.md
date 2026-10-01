@@ -186,15 +186,28 @@ python installer\make-art.py     # 只依赖标准库,不需要 Pillow
 
 **回滚**:`Get-AppxPackage *EarTrumpet* | Remove-AppxPackage`，然后重新安装官方版（商店或官网）。
 
-### 为什么这个 MSIX 是"更新"而不是"并列安装"
+### 这个 MSIX 用的是本分支自己的身份
 
-你机器上已经装了官方包 `40459File-New-Project.EarTrumpet` **2.3.0.0**(x86)。这个 MSIX **刻意保留
-清单里的原始身份与发布者**,而版本是 `2.3.0.136`（更高）—— 所以 Windows 会把它当作同一应用的更新,
-直接替换掉官方版,而不是装出第二个 EarTrumpet。
+清单里的 `Identity` 是**本分支自己的**,不再是上游的商店身份:
 
-想让两者共存（保留官方版做对照）：把 `EarTrumpet.Package/Package.appxmanifest` 的 `Identity Name`
-改成别的（例如 `EarTrumpet.LocalBuild`）、`Publisher` 也换一个,然后重新打包即可 —— 但那样就得为新的
-发布者名再信任一张证书。
+| 字段 | 值 |
+| --- | --- |
+| `Identity Name` | `YHuanheg.EarTrumpet` |
+| `Identity Publisher` | `CN=YHuanheg` |
+| `PublisherDisplayName` | `YHuanheg` |
+
+签名用与 `Publisher` **同名**的自签证书,由 `make-package.ps1` 在需要时自动创建。
+
+上游原本用的是商店分配的身份(`40459File-New-Project.EarTrumpet` + 他们的发布者证书)。
+照搬会让本分支的包**冒充上游的发布者**,所以改掉了。
+
+**带来两个后果,升级前必须知道:**
+
+1. **装上去是"并列"的一个应用,不再是"官方版的更新"。** 机器上如果还装着官方版,
+   或者装着**旧身份**(发布者仍是 `CN=6099D0EF-…`)的本分支包,都要**先卸载**,
+   否则会出现两个 EarTrumpet。想留官方版做对照,现在天然就是并列的,不用再改。
+2. **换了发布者名就要重新信任证书。** 旧证书是签给旧发布者名的,对新包无效 ——
+   要重新双击新生成的 `eartrumpet-local.cer`,装进「受信任的根证书颁发机构」。
 
 ### 签名说明
 
