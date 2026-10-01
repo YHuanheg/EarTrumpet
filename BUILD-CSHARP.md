@@ -406,6 +406,16 @@ EarTrumpet.exe --volume-osd-preview 50 --dark     # 强制深色
   **恒为 `x.y.z.0`**;提交数只在 **`ProductVersion`**(`2.3.0-ci.139+Branch.master.Sha.…`)里。
   读错字段会往清单里写一个**比已装版本还小**的号,升级直接被拒。
 * 步骤 0.5 会自动同步;版本没变大时会打黄色警告。
+
+> ⚠️ **发布 Release 时,tag 千万别用"版本号形式"的名字。**
+> 实测(2026-10-01):在 HEAD 上打 `v2.3.0.140` 之后,GitVersion 的提交计数
+> (`CommitsSinceVersionSource`)**归零**,版本直接掉成 `2.3.0` —— 比已经发布的 140 **还小**,
+> 于是**下次打出来的 MSIX 会因为"版本号不够大"而装不上**,而且报错很难懂。
+>
+> 所以发布用的 tag 一律写成 `build-<版本>` 这种**不以版本号开头**的名字(`build-2.3.0.140`),
+> GitVersion 不解析它,计数照常;真实版本写在 Release 标题里。
+> 想知道当前版本,看**编译产物的 `ProductVersion`**,不要看 `git describe` ——
+> 后者会指向那个 `build-...` tag,看起来像版本号,其实是发布标签。
 * `installer/setup.nsi` 的 `APPVERSION` 默认值是**占位的 `0.0.0.0` + 编译期警告** ——
   以前写死 `2.3.0.136`,手工编译会得到一个"自称 136"的安装包(还会把错的版本写进
   「设置 → 应用」的 DisplayVersion)。正式打包一律由 `make-package.ps1` 传进来。

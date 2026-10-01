@@ -18,13 +18,13 @@
 | **不上报任何数据** | 官方版会经 Bugsnag 把崩溃报告发送到上游账号。本分支把上报客户端、配置节、依赖包与相关开关**整条链路移除**,只保留本机诊断(「Troubleshoot」按钮读的是内存里的日志),不会向任何地方发送数据 |
 | **安装器更省事** | 覆盖安装或卸载时如果 EarTrumpet 正在运行,会询问是否结束它并继续,而不是直接拒绝 |
 
-## 安装
+## 下载 / 安装
 
-三种形态任选其一。仓库里不含二进制,**请按下面的"自己构建"生成**:
+到 **[Releases](https://github.com/YHuanheg/EarTrumpet/releases)** 下载,三种形态任选其一:
 
-- `EarTrumpet-<版本>-setup.exe` —— 向导式安装,装到 `%LOCALAPPDATA%\Programs\EarTrumpet`,全程不需要管理员权限
+- `EarTrumpet-<版本>-setup.exe` —— 向导式安装,装到 `%LOCALAPPDATA%\Programs\EarTrumpet`,全程不需要管理员权限。**推荐**
 - `EarTrumpet-<版本>-portable-x86.zip` —— 解压即用,包内已带 `portable.txt`(设置随文件夹走)
-- `EarTrumpet-<版本>-x86.msix` —— 安装前需信任打包时生成的自签证书
+- `EarTrumpet-<版本>-x86.msix` —— 应用包安装,**需要先把 `eartrumpet-local.cer` 装进「受信任的根证书颁发机构」**,否则 Windows 会拒绝安装
 
 > 如果之前装过商店(MSIX)版或官方版,建议先卸载再装本分支,否则会出现两个托盘图标。
 
