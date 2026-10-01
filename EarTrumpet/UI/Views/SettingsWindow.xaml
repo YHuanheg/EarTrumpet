@@ -171,6 +171,134 @@
                           IsChecked="{Binding UseGlobalMouseWheelHook, Mode=TwoWay}" />
             </StackPanel>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:EarTrumpetStartupSettingsPageViewModel}">
+            <StackPanel Orientation="Vertical">
+                <CheckBox HorizontalAlignment="Left"
+                          Content="{x:Static resx:Resources.SettingsRunAtStartup}"
+                          IsChecked="{Binding RunAtStartup, Mode=TwoWay}"
+                          IsEnabled="{Binding IsRunAtStartupConfigurable}" />
+                <TextBlock Text="{Binding RunAtStartupStatusText}">
+                    <TextBlock.Style>
+                        <Style BasedOn="{StaticResource BodySubText}" TargetType="TextBlock">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding HasRunAtStartupStatusText}" Value="False">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:EarTrumpetDeviceSettingsPageViewModel}">
+            <StackPanel Orientation="Vertical">
+                <CheckBox HorizontalAlignment="Left"
+                          Content="{x:Static resx:Resources.SettingsRememberBluetoothVolume}"
+                          IsChecked="{Binding RememberBluetoothVolume, Mode=TwoWay}" />
+                <TextBlock Style="{StaticResource BodySubText}" Text="{x:Static resx:Resources.SettingsRememberBluetoothVolumeDescription}" />
+
+                <!--  已记录音量的设备。含当前没连接的:能不能恢复,取决于这里的记录,所以断开的设备同样要露面。  -->
+                <TextBlock Margin="12,24,12,0"
+                           FontSize="16"
+                           Text="{Binding RememberedDevicesHeader}" />
+
+                <TextBlock Text="{x:Static resx:Resources.SettingsNoRememberedDevicesText}">
+                    <TextBlock.Style>
+                        <Style BasedOn="{StaticResource BodySubText}" TargetType="TextBlock">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding HasNoRememberedDevices}" Value="False">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
+                <ItemsControl Margin="12,4,12,12" ItemsSource="{Binding RememberedDevices}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderThickness="0,0,0,1"
+                                    Theme:Brush.BorderBrush="Light=LightBaseMediumLow/0.12, Dark=DarkBaseMediumLow/0.12, HighContrast=Highlight">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="4" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!--  已连接的设备左侧有一条强调色竖条,断开时为透明  -->
+                                    <Border Width="4">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Theme:Brush.Background" Value="Transparent" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                                                        <Setter Property="Theme:Brush.Background" Value="SystemAccent" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                    </Border>
+
+                                    <StackPanel Grid.Column="1"
+                                                Margin="10,8,0,8"
+                                                ToolTipService.ToolTip="{Binding DetailsText}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock FontSize="15"
+                                                       Text="{Binding DisplayName}"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       TextWrapping="NoWrap" />
+                                            <TextBlock Grid.Column="1"
+                                                       Margin="12,0,0,0"
+                                                       FontSize="13"
+                                                       Theme:Brush.Foreground="GrayText"
+                                                       Text="{Binding StatusText}"
+                                                       VerticalAlignment="Center" />
+                                        </Grid>
+                                        <TextBlock Margin="0,2,0,0"
+                                                   FontSize="13"
+                                                   Theme:Brush.Foreground="GrayText"
+                                                   Text="{Binding SummaryText}"
+                                                   TextWrapping="Wrap" />
+                                        <TextBlock Margin="0,2,0,0"
+                                                   FontSize="12"
+                                                   Theme:Brush.Foreground="GrayText"
+                                                   Text="{Binding LastRecordedText}"
+                                                   TextWrapping="Wrap">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsLastRecordedVisible}" Value="False">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </StackPanel>
+
+                                    <!--  只删掉这条记录,设备本身不动;下次调音量会重新学会  -->
+                                    <TextBlock Grid.Column="2"
+                                               Margin="16,0,0,0"
+                                               FontSize="13"
+                                               Style="{StaticResource HyperlinkBlock}"
+                                               VerticalAlignment="Center">
+                                        <Hyperlink AutomationProperties.Name="{x:Static resx:Resources.SettingsRememberedDeviceForgetText}"
+                                                   Command="{Binding ForgetCommand}">
+                                            <Run Text="{x:Static resx:Resources.SettingsRememberedDeviceForgetText}" />
+                                        </Hyperlink>
+                                    </TextBlock>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type vm:EarTrumpetCommunitySettingsPageViewModel}">
             <StackPanel Orientation="Vertical">
                 <CheckBox HorizontalAlignment="Left"

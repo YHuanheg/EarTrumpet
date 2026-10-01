@@ -1,0 +1,88 @@
+<Window x:Class="EarTrumpet.UI.Views.VolumeOsdWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="EarTrumpet"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Focusable="False"
+        IsHitTestVisible="False"
+        ResizeMode="NoResize"
+        ShowActivated="False"
+        ShowInTaskbar="False"
+        SizeToContent="Manual"
+        SnapsToDevicePixels="True"
+        TextOptions.TextFormattingMode="Display"
+        Topmost="True"
+        UseLayoutRounding="True"
+        WindowStartupLocation="Manual"
+        WindowStyle="None">
+    <!--
+        A stand-in for the overlay Windows draws for the volume keys. It cannot be the real
+        one: that lives inside ShellExperienceHost and only reacts to hardware AppCommands,
+        with no API to summon it (see VolumeOsdWindow.xaml.cs for the detail).
+
+        Geometry, colours and the 1px rim are measured off a screenshot of the real overlay at
+        125% scale, divided back into DIPs - hence the round numbers (192x46 card, 110x4 track).
+
+        Window size and the card's margin are set in code from the same constants the
+        positioning uses, so the card always lands on the measured spot.
+    -->
+    <Border x:Name="Card" Background="{Binding CardBrush}" CornerRadius="6">
+        <Border.Effect>
+            <!-- The real overlay has a soft shadow; without one the card looks pasted on. -->
+            <DropShadowEffect BlurRadius="14"
+                              Color="Black"
+                              Direction="270"
+                              Opacity="0.35"
+                              ShadowDepth="2" />
+        </Border.Effect>
+
+        <Grid>
+            <!--
+                One cell, children placed by alignment + margin. Fixed-width columns were tried
+                first and clipped the glyphs (a 16px speaker does not fit in a 14px column), and
+                Auto columns let the track drift 8px left of where Windows puts it. Margins set
+                the horizontal positions measured off the real overlay; nothing constrains the
+                children, so nothing gets cut.
+            -->
+            <TextBlock FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets"
+                       FontSize="15"
+                       Foreground="{Binding TextBrush}"
+                       HorizontalAlignment="Left"
+                       Margin="11,0,0,0"
+                       Text="{Binding Glyph}"
+                       VerticalAlignment="Center" />
+
+            <Grid Height="4"
+                  HorizontalAlignment="Left"
+                  Margin="41,0,0,0"
+                  VerticalAlignment="Center"
+                  Width="110">
+                <Border Background="{Binding TrackBrush}" CornerRadius="2" />
+                <Border Width="{Binding FillWidth}"
+                        Background="{Binding FillBrush}"
+                        CornerRadius="2"
+                        HorizontalAlignment="Left" />
+            </Grid>
+
+            <!-- Normal weight: measured against the real overlay, SemiBold came out visibly
+                 heavier and wider than what Windows draws. -->
+            <TextBlock FontSize="15"
+                       Foreground="{Binding TextBrush}"
+                       HorizontalAlignment="Right"
+                       Margin="0,0,14,0"
+                       Text="{Binding VolumeText}"
+                       VerticalAlignment="Center" />
+
+            <!--
+                The rim, as an overlay rather than as BorderThickness on the card: a border eats
+                into the content box, which would shift every margin above by a pixel and break
+                the alignment against the real overlay.
+            -->
+            <Border BorderBrush="{Binding BorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="6"
+                    IsHitTestVisible="False" />
+        </Grid>
+    </Border>
+</Window>

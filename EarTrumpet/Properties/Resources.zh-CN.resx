@@ -659,4 +659,79 @@
   <data name="SettingsUseGlobalMouseWheelHook" xml:space="preserve">
     <value>浮出面板打开时，使用滚轮调节音量</value>
   </data>
+  <data name="StartupSettingsPageText" xml:space="preserve">
+    <value>启动</value>
+  </data>
+  <data name="SettingsRunAtStartup" xml:space="preserve">
+    <value>登录 Windows 时自动启动 EarTrumpet</value>
+  </data>
+  <data name="SettingsRunAtStartupDisabledByUserText" xml:space="preserve">
+    <value>已在「任务管理器 &gt; 启动应用」中被关闭，请先在那里重新启用。</value>
+  </data>
+  <data name="SettingsRunAtStartupDisabledByPolicyText" xml:space="preserve">
+    <value>已被组织策略关闭。</value>
+  </data>
+  <data name="SettingsRunAtStartupEnabledByPolicyText" xml:space="preserve">
+    <value>已被组织策略强制开启。</value>
+  </data>
+  <data name="SettingsRunAtStartupUnavailableText" xml:space="preserve">
+    <value>无法读取或修改开机启动设置。</value>
+  </data>
+  <data name="DeviceSettingsPageText" xml:space="preserve">
+    <value>设备</value>
+  </data>
+  <data name="SettingsRememberBluetoothVolume" xml:space="preserve">
+    <value>记住蓝牙设备的音量</value>
+  </data>
+  <data name="SettingsRememberBluetoothVolumeDescription" xml:space="preserve">
+    <value>按蓝牙设备分别记住音量，并在该设备重新连接时自动恢复。</value>
+  </data>
+  <data name="CommunitySettingsPageText" xml:space="preserve">
+    <value>社区设置</value>
+  </data>
+  <data name="SettingsUseLogarithmicVolume" xml:space="preserve">
+    <value>使用对数音量刻度</value>
+  </data>
+  <data name="SettingsRememberedDevicesHeader" xml:space="preserve">
+    <value>已记录音量的设备（{0}）</value>
+  </data>
+  <data name="SettingsNoRememberedDevicesText" xml:space="preserve">
+    <value>还没有记录。给蓝牙设备调一次音量，它就会出现在这里。</value>
+  </data>
+  <data name="SettingsRememberedDeviceConnectedText" xml:space="preserve">
+    <value>已连接</value>
+  </data>
+  <data name="SettingsRememberedDeviceDisconnectedText" xml:space="preserve">
+    <value>未连接</value>
+  </data>
+  <data name="SettingsRememberedDeviceUnknownNameText" xml:space="preserve">
+    <value>未知设备</value>
+  </data>
+  <data name="SettingsRememberedDeviceLastRecordedFormat" xml:space="preserve">
+    <value>上次见到 {0}</value>
+  </data>
+  <data name="SettingsRememberedDeviceCurrentVolumeFormat" xml:space="preserve">
+    <value>当前 {0}</value>
+  </data>
+  <data name="SettingsRememberedDeviceToolTipFormat" xml:space="preserve">
+    <value>端点 ID：{0} · 枚举器：{1}</value>
+  </data>
+  <data name="BluetoothDeviceKindStereoText" xml:space="preserve">
+    <value>蓝牙立体声（A2DP）</value>
+  </data>
+  <data name="BluetoothDeviceKindHandsFreeText" xml:space="preserve">
+    <value>蓝牙免提（HFP）</value>
+  </data>
+  <data name="BluetoothDeviceKindLeAudioText" xml:space="preserve">
+    <value>蓝牙 LE Audio</value>
+  </data>
+  <data name="BluetoothDeviceKindGenericText" xml:space="preserve">
+    <value>蓝牙音频</value>
+  </data>
+  <data name="SettingsRememberedDeviceRememberedVolumeFormat" xml:space="preserve">
+    <value>记忆音量 {0}</value>
+  </data>
+  <data name="SettingsRememberedDeviceForgetText" xml:space="preserve">
+    <value>忘记此设备</value>
+  </data>
 </root>

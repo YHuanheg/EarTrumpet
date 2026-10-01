@@ -119,6 +119,13 @@ namespace EarTrumpet.Interop
         }
 
         public const int WS_EX_TOOLWINDOW = 0x00000080;
+
+        /// <summary>Keeps a window from ever taking the foreground (the volume overlay uses it).</summary>
+        public const int WS_EX_NOACTIVATE = 0x08000000;
+
+        /// <summary>Makes a window click-through (the volume overlay uses it).</summary>
+        public const int WS_EX_TRANSPARENT = 0x00000020;
+
         public const int WS_MAXIMIZEBOX = 0x10000;
 
         [StructLayout(LayoutKind.Sequential)]

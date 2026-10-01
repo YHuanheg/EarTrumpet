@@ -53,7 +53,12 @@ namespace EarTrumpet.UI.ViewModels
             Header = new SettingsPageHeaderViewModel(this);
         }
 
-        public void NavigatedTo()
+        /// <summary>
+        /// Called every time this page becomes the selected one. Pages that show live state
+        /// (rather than just stored settings) override this to re-read it, because the world
+        /// may have moved on while the page was in the background.
+        /// </summary>
+        public virtual void NavigatedTo()
         {
 
         }

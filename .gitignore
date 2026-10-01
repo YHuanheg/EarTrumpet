@@ -214,3 +214,6 @@ _pkginfo.txt
 .chocolatey/tools/Release.zip
 /artifacts/sideload
 /Tools
+
+# 助手工作区(本地构建环境、验证脚本、记忆),不入库
+/.workbuddy/

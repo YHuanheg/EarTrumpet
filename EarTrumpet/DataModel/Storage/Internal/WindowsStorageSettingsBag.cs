@@ -1,5 +1,6 @@
 ﻿using EarTrumpet.Diagnosis;
 using System;
+using System.Collections.Generic;
 using Windows.Management.Core;
 using Windows.Storage;
 
@@ -59,6 +60,48 @@ namespace EarTrumpet.DataModel.Storage.Internal
             }
 
             SettingChanged?.Invoke(this, key);
+        }
+
+        public string GetRaw(string key)
+        {
+            // ReadSetting<string> hands back whatever the value holds, whatever its type, or null.
+            return HasKey(key) ? ReadSetting<string>(key, null) : null;
+        }
+
+        public void Remove(string key)
+        {
+            try
+            {
+                // Not an error if it was never there.
+                _appDataManager.LocalSettings.Values.Remove(key);
+                SettingChanged?.Invoke(this, key);
+            }
+            catch (Exception ex)
+            {
+                // Removing a setting is best effort - never take the app down over it.
+                ErrorReporter.LogWarning(ex);
+            }
+        }
+
+        public IEnumerable<string> GetKeys()
+        {
+            var ret = new List<string>();
+            try
+            {
+                foreach (var key in _appDataManager.LocalSettings.Values.Keys)
+                {
+                    if (!string.IsNullOrEmpty(key))
+                    {
+                        ret.Add(key);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Reading the key list is best effort - a failure here must not take the app down.
+                ErrorReporter.LogWarning(ex);
+            }
+            return ret;
         }
 
         static T ReadSetting<T>(string key, T defaultValue)

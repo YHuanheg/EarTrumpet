@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+- Added a setting to start EarTrumpet when signing in to Windows (uses the packaged startup task when installed as a package, and the registry Run key otherwise)
+- Added a setting to remember the volume of each Bluetooth device and restore it when that device reconnects
+- The Devices settings page now lists every device with a remembered volume, including devices that are not connected, and shows the remembered volume, what the device is at right now, whether it is connected, which Bluetooth profile it uses, and when it was last seen. Each entry also has a "forget this device" action that drops the record without touching the device itself (the volume is learned again the next time it changes)
+- Portable builds now keep their settings in a settings.json next to the application instead of the registry, so the folder can be copied to another machine with its configuration. The portable zip ships with the switch (portable.txt) already in place; an existing install's settings are copied over the first time, and deleting settings.json goes back to the registry
+- EarTrumpet now drops remembered Bluetooth volumes that could never be restored (an unusable value, or an orphaned record), which previously accumulated silently
+- The 32 per-language folders now live in a single "Language" folder next to the app instead of cluttering the install directory. The runtime will not look there, so the app loads its translations through LanguageFolderResourceManager, and packaging fails loudly if that wiring is ever lost
+- When a reconnecting Bluetooth device gets its remembered volume back, the same volume overlay Windows shows for the volume keys now appears, at the same size, position and timing. Windows does not let other apps raise its own overlay (Windows 11 removed the older one that software volume changes used to trigger, and the current one only answers to hardware keys), so EarTrumpet draws a match of it, including the card's 1px rim and drop shadow. It follows the Windows light/dark setting, and "EarTrumpet.exe --volume-osd-preview 50" shows it on demand (add --light or --dark to check either palette)
+
 ## 2.3.0.0
 - Added setting to turn on/off ability to change volume with the scroll wheel anywhere (thanks @Tester798!)
 - Added setting to turn on/off ability to change volume with the scroll wheel when hovering over the EarTrumpet icon (thanks @Tester798!)

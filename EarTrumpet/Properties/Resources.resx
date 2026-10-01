@@ -665,4 +665,73 @@ Open [https://eartrumpet.app/jmp/fixfonts] now?</value>
   <data name="SettingsUseLogarithmicVolume" xml:space="preserve">
     <value>Use logarithmic volume scale</value>
   </data>
+  <data name="StartupSettingsPageText" xml:space="preserve">
+    <value>Startup</value>
+  </data>
+  <data name="SettingsRunAtStartup" xml:space="preserve">
+    <value>Start EarTrumpet when I sign in to Windows</value>
+  </data>
+  <data name="SettingsRunAtStartupDisabledByUserText" xml:space="preserve">
+    <value>Turned off in Task Manager &gt; Startup apps. Turn it back on there first.</value>
+  </data>
+  <data name="SettingsRunAtStartupDisabledByPolicyText" xml:space="preserve">
+    <value>Turned off by your organization's policy.</value>
+  </data>
+  <data name="SettingsRunAtStartupEnabledByPolicyText" xml:space="preserve">
+    <value>Turned on by your organization's policy.</value>
+  </data>
+  <data name="SettingsRunAtStartupUnavailableText" xml:space="preserve">
+    <value>EarTrumpet could not read or write the startup setting.</value>
+  </data>
+  <data name="DeviceSettingsPageText" xml:space="preserve">
+    <value>Devices</value>
+  </data>
+  <data name="SettingsRememberBluetoothVolume" xml:space="preserve">
+    <value>Remember the volume of Bluetooth devices</value>
+  </data>
+  <data name="SettingsRememberBluetoothVolumeDescription" xml:space="preserve">
+    <value>Each Bluetooth device gets its own remembered volume, which is restored the next time it reconnects.</value>
+  </data>
+  <data name="SettingsRememberedDevicesHeader" xml:space="preserve">
+    <value>Devices with a remembered volume ({0})</value>
+  </data>
+  <data name="SettingsNoRememberedDevicesText" xml:space="preserve">
+    <value>Nothing recorded yet. Change the volume on a Bluetooth device and it shows up here.</value>
+  </data>
+  <data name="SettingsRememberedDeviceConnectedText" xml:space="preserve">
+    <value>Connected</value>
+  </data>
+  <data name="SettingsRememberedDeviceDisconnectedText" xml:space="preserve">
+    <value>Not connected</value>
+  </data>
+  <data name="SettingsRememberedDeviceUnknownNameText" xml:space="preserve">
+    <value>Unknown device</value>
+  </data>
+  <data name="SettingsRememberedDeviceLastRecordedFormat" xml:space="preserve">
+    <value>Last seen {0}</value>
+  </data>
+  <data name="SettingsRememberedDeviceCurrentVolumeFormat" xml:space="preserve">
+    <value>now {0}</value>
+  </data>
+  <data name="SettingsRememberedDeviceToolTipFormat" xml:space="preserve">
+    <value>Endpoint id: {0} · Enumerator: {1}</value>
+  </data>
+  <data name="BluetoothDeviceKindStereoText" xml:space="preserve">
+    <value>Bluetooth stereo (A2DP)</value>
+  </data>
+  <data name="BluetoothDeviceKindHandsFreeText" xml:space="preserve">
+    <value>Bluetooth hands-free (HFP)</value>
+  </data>
+  <data name="BluetoothDeviceKindLeAudioText" xml:space="preserve">
+    <value>Bluetooth LE Audio</value>
+  </data>
+  <data name="BluetoothDeviceKindGenericText" xml:space="preserve">
+    <value>Bluetooth audio</value>
+  </data>
+  <data name="SettingsRememberedDeviceRememberedVolumeFormat" xml:space="preserve">
+    <value>remembered {0}</value>
+  </data>
+  <data name="SettingsRememberedDeviceForgetText" xml:space="preserve">
+    <value>Forget this device</value>
+  </data>
 </root>

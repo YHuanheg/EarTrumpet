@@ -166,6 +166,12 @@ namespace EarTrumpet
             set => _settings.Set("UseLogarithmicVolume", value);
         }
 
+        public bool RememberBluetoothVolume
+        {
+            get => _settings.Get("RememberBluetoothVolume", true);
+            set => _settings.Set("RememberBluetoothVolume", value);
+        }
+
         public WINDOWPLACEMENT? FullMixerWindowPlacement
         {
             get => _settings.Get("FullMixerWindowPlacement", default(WINDOWPLACEMENT?));

@@ -67,6 +67,9 @@
     <Reference Include="Windows, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath Condition="Exists('$(MSBuildProgramFiles32)\Windows Kits\10\UnionMetadata\Windows.winmd')">$(MSBuildProgramFiles32)\Windows Kits\10\UnionMetadata\Windows.winmd</HintPath>
+      <!-- 本机只装了 Windows SDK 26100;上面两条 HintPath(顶层的 Windows.winmd 与 10.0.16299.0)
+           都不存在,补上实际安装的这个版本。原项目的 csproj 是 2019 年写的,那时 SDK 布局不同。 -->
+      <HintPath Condition="Exists('$(MSBuildProgramFiles32)\Windows Kits\10\UnionMetadata\10.0.26100.0\Windows.winmd')">$(MSBuildProgramFiles32)\Windows Kits\10\UnionMetadata\10.0.26100.0\Windows.winmd</HintPath>
       <HintPath Condition="Exists('$(MSBuildProgramFiles32)\Windows Kits\10\UnionMetadata\10.0.16299.0\Windows.winmd')">$(MSBuildProgramFiles32)\Windows Kits\10\UnionMetadata\10.0.16299.0\Windows.winmd</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
@@ -163,6 +166,9 @@
     <Compile Include="DataModel\WindowsAudio\Internal\AudioDeviceSessionChannel.cs" />
     <Compile Include="DataModel\WindowsAudio\Internal\AudioDeviceSessionChannelCollection.cs" />
     <Compile Include="DataModel\WindowsAudio\Internal\AudioDeviceSessionChannelMultiplexer.cs" />
+    <Compile Include="DataModel\BluetoothVolumeMemory.cs" />
+    <Compile Include="DataModel\RememberedDevice.cs" />
+    <Compile Include="DataModel\VolumeRestoredEventArgs.cs" />
     <Compile Include="DataModel\FilteredCollectionChain.cs" />
     <Compile Include="DataModel\WindowsAudio\IAudioDeviceChannel.cs" />
     <Compile Include="DataModel\WindowsAudio\IAudioDeviceSessionChannel.cs" />
@@ -172,6 +178,8 @@
     <Compile Include="DataModel\WindowsAudio\Internal\Helpers.cs" />
     <Compile Include="DataModel\Audio\SessionState.cs" />
     <Compile Include="DataModel\Storage\Internal\RegistrySettingsBag.cs" />
+    <Compile Include="DataModel\Storage\Internal\JsonFileSettingsBag.cs" />
+    <Compile Include="DataModel\Storage\Internal\PortableSettings.cs" />
     <Compile Include="DataModel\Storage\Serializer.cs" />
     <Compile Include="DataModel\Storage\StorageFactory.cs" />
     <Compile Include="DataModel\Storage\Internal\WindowsStorageSettingsBag.cs" />
@@ -196,6 +204,8 @@
     <Compile Include="Interop\Helpers\MouseHook.cs" />
     <Compile Include="Interop\Helpers\SettingsPageHelper.cs" />
     <Compile Include="Interop\Helpers\PackageHelper.cs" />
+    <Compile Include="Interop\Helpers\RunKeyStartupRegistration.cs" />
+    <Compile Include="Interop\Helpers\StartupHelper.cs" />
     <Compile Include="Interop\IShellItemImageFactory.cs" />
     <Compile Include="Interop\MMDeviceAPI\IAudioPolicyConfigFactoryVariantFor21H2.cs" />
     <Compile Include="Interop\MMDeviceAPI\IAudioPolicyConfigFactory.cs" />
@@ -235,6 +245,9 @@
     <Compile Include="UI\ViewModels\EarTrumpetCommunitySettingsPageViewModel.cs" />
     <Compile Include="UI\ViewModels\EarTrumpetMouseSettingsPageViewModel.cs" />
     <Compile Include="UI\ViewModels\EarTrumpetShortcutsPageViewModel.cs" />
+    <Compile Include="UI\ViewModels\EarTrumpetDeviceSettingsPageViewModel.cs" />
+    <Compile Include="UI\ViewModels\RememberedVolumeDeviceViewModel.cs" />
+    <Compile Include="UI\ViewModels\EarTrumpetStartupSettingsPageViewModel.cs" />
     <Compile Include="Extensibility\IEarTrumpetAddonAppContent.cs" />
     <Compile Include="Extensibility\IEarTrumpetAddonDeviceContent.cs" />
     <Compile Include="Extensibility\IEarTrumpetAddonEvents.cs" />
@@ -326,6 +339,7 @@
     <Compile Include="DataModel\WindowsAudio\Internal\AudioPolicyConfigService.cs" />
     <Compile Include="Diagnosis\LocalDataExporter.cs" />
     <Compile Include="AppSettings.cs" />
+    <Compile Include="LanguageFolderResourceManager.cs" />
     <Compile Include="UI\ViewModels\WelcomeViewModel.cs" />
     <Compile Include="UI\Views\DialogWindow.xaml.cs">
       <DependentUpon>DialogWindow.xaml</DependentUpon>
@@ -433,6 +447,15 @@
       <DependentUpon>FlyoutWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="UI\Views\VolumeOsdWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="UI\Views\VolumeOsdWindow.xaml.cs">
+      <DependentUpon>VolumeOsdWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\ViewModels\VolumeOsdViewModel.cs" />
     <Page Include="UI\Views\AppItemView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

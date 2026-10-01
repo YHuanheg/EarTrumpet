@@ -1,3 +1,4 @@
+using EarTrumpet.DataModel;
 using EarTrumpet.DataModel.WindowsAudio;
 using EarTrumpet.Diagnosis;
 using EarTrumpet.Extensibility;
@@ -17,6 +18,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace EarTrumpet
 {
@@ -39,12 +41,20 @@ namespace EarTrumpet
         private WindowHolder _mixerWindow;
         private WindowHolder _settingsWindow;
         private ErrorReporter _errorReporter;
+        private BluetoothVolumeMemory _bluetoothVolumeMemory;
+        private VolumeOsdWindow _volumeOsd;
 
         public static AppSettings Settings { get; private set; }
 
         private void OnAppStartup(object sender, StartupEventArgs e)
         {
             RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
+
+            if (TryRunVolumeOsdPreview(e.Args))
+            {
+                // Preview mode is self contained: it shows the overlay once and shuts down.
+                return;
+            }
 
             Exit += (_, __) => IsShuttingDown = true;
             HasIdentity = PackageHelper.CheckHasIdentity();
@@ -82,6 +92,13 @@ namespace EarTrumpet
             var deviceManager = WindowsAudioFactory.Create(AudioDeviceKind.Playback);
             deviceManager.Loaded += (_, __) => CompleteStartup();
             CollectionViewModel = new DeviceCollectionViewModel(deviceManager, Settings);
+            // Watches Bluetooth endpoints so their volume survives a disconnect/reconnect.
+            _bluetoothVolumeMemory = new BluetoothVolumeMemory(deviceManager, Settings);
+
+            // Show the volume overlay when a device comes back and gets its level restored, so
+            // the user can see which level it landed on.
+            _volumeOsd = new VolumeOsdWindow();
+            _bluetoothVolumeMemory.VolumeRestored += OnVolumeRestored;
 
             _trayIcon = new ShellNotifyIcon(new TaskbarIconSource(CollectionViewModel, Settings));
             Exit += (_, __) => _trayIcon.IsVisible = false;
@@ -92,6 +109,86 @@ namespace EarTrumpet
             // Initialize the FlyoutWindow last because its Show/Hide cycle will pump messages, causing UI frames
             // to be executed, breaking the assumption that startup is complete.
             FlyoutWindow.Initialize();
+        }
+
+        private void OnVolumeRestored(object sender, VolumeRestoredEventArgs e)
+        {
+            // Raised from wherever the audio manager reports device changes; the overlay is UI.
+            _volumeOsd.Dispatcher.BeginInvoke(
+                (Action)(() => _volumeOsd.ShowVolume(e.Volume, e.IsMuted)));
+        }
+
+        /// <summary>
+        /// Handles "--volume-osd-preview [percent]": shows the volume overlay once, then quits.
+        ///
+        /// Without this the overlay is only reachable by physically reconnecting a Bluetooth
+        /// device, which makes it awkward to look at and impossible to check from a script.
+        /// It runs before the single-instance mutex on purpose, so it works while EarTrumpet is
+        /// already running.
+        /// </summary>
+        private bool TryRunVolumeOsdPreview(string[] args)
+        {
+            const string flag = "--volume-osd-preview";
+            var index = (args == null) ? -1 :
+                Array.FindIndex(args, a => string.Equals(a, flag, StringComparison.OrdinalIgnoreCase));
+            if (index < 0)
+            {
+                return false;
+            }
+
+            var volume = 50;
+            if (index + 1 < args.Length && int.TryParse(args[index + 1], out var requested))
+            {
+                volume = Math.Max(0, Math.Min(100, requested));
+            }
+
+            // Naming a palette makes both of them checkable without touching the Windows theme.
+            var theme = VolumeOsdTheme.System;
+            if (args.Any(a => string.Equals(a, "--dark", StringComparison.OrdinalIgnoreCase)))
+            {
+                theme = VolumeOsdTheme.Dark;
+            }
+            else if (args.Any(a => string.Equals(a, "--light", StringComparison.OrdinalIgnoreCase)))
+            {
+                theme = VolumeOsdTheme.Light;
+            }
+
+            var preview = new VolumeOsdWindow();
+            preview.ShowVolume(volume, volume <= 0, theme);
+
+            // Report where it landed. Positioning an overlay across DPI scales is fiddly, and
+            // this is the only way to check it without watching the screen.
+            var reportTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(600) };
+            reportTimer.Tick += (_, __) =>
+            {
+                reportTimer.Stop();
+                try
+                {
+                    var dpi = VisualTreeHelper.GetDpi(preview);
+                    System.IO.File.WriteAllText(
+                        System.IO.Path.Combine(System.IO.Path.GetTempPath(), "eartrumpet-volume-osd-preview.txt"),
+                        $"workArea={SystemParameters.WorkArea} virtualScreen={SystemParameters.VirtualScreenLeft},{SystemParameters.VirtualScreenTop},{SystemParameters.VirtualScreenWidth},{SystemParameters.VirtualScreenHeight}\n" +
+                        $"window Left={preview.Left} Top={preview.Top} Width={preview.Width} Height={preview.Height} actual={preview.ActualWidth}x{preview.ActualHeight}\n" +
+                        $"dpi={dpi.PixelsPerDip} scaleX={dpi.DpiScaleX} scaleY={dpi.DpiScaleY} isVisible={preview.IsVisible} opacity={preview.Opacity}\n" +
+                        $"theme={theme} systemLight={DataModel.SystemSettings.IsSystemLightTheme} appLight={DataModel.SystemSettings.IsLightTheme}");
+                }
+                catch (Exception ex)
+                {
+                    Trace.WriteLine($"Volume OSD preview report failed: {ex.Message}");
+                }
+            };
+            reportTimer.Start();
+
+            var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(6) };
+            timer.Tick += (_, __) =>
+            {
+                timer.Stop();
+                preview.Close();
+                Shutdown();
+            };
+            timer.Start();
+
+            return true;
         }
 
         private void CompleteStartup()
@@ -246,6 +343,8 @@ namespace EarTrumpet
                     {
                         new EarTrumpetShortcutsPageViewModel(Settings),
                         new EarTrumpetMouseSettingsPageViewModel(Settings),
+                        new EarTrumpetStartupSettingsPageViewModel(),
+                        new EarTrumpetDeviceSettingsPageViewModel(_bluetoothVolumeMemory),
                         new EarTrumpetCommunitySettingsPageViewModel(Settings),
                         new EarTrumpetLegacySettingsPageViewModel(Settings),
                         new EarTrumpetAboutPageViewModel(() => _errorReporter.DisplayDiagnosticData(), Settings)

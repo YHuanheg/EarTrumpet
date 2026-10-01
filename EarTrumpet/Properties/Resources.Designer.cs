@@ -35,11 +35,18 @@ namespace EarTrumpet.Properties {
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
+        /// <remarks>
+        ///   EarTrumpet change: the satellites live in "Language\&lt;culture&gt;\" rather than the
+        ///   "&lt;culture&gt;\" folders the runtime probes, so this uses LanguageFolderResourceManager
+        ///   instead of the stock type. If Visual Studio regenerates this file that line will
+        ///   revert and the app will silently fall back to English - verify-localization.ps1
+        ///   exists to make that loud, and runs as part of packaging.
+        /// </remarks>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("EarTrumpet.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::EarTrumpet.LanguageFolderResourceManager("EarTrumpet.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -1548,6 +1555,87 @@ namespace EarTrumpet.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Devices.
+        /// </summary>
+        public static string DeviceSettingsPageText {
+            get {
+                return ResourceManager.GetString("DeviceSettingsPageText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Each Bluetooth device gets its own remembered volume, which is restored the next time it reconnects..
+        /// </summary>
+        public static string SettingsRememberBluetoothVolumeDescription {
+            get {
+                return ResourceManager.GetString("SettingsRememberBluetoothVolumeDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remember the volume of Bluetooth devices.
+        /// </summary>
+        public static string SettingsRememberBluetoothVolume {
+            get {
+                return ResourceManager.GetString("SettingsRememberBluetoothVolume", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start EarTrumpet when I sign in to Windows.
+        /// </summary>
+        public static string SettingsRunAtStartup {
+            get {
+                return ResourceManager.GetString("SettingsRunAtStartup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Turned off by your organization&apos;s policy..
+        /// </summary>
+        public static string SettingsRunAtStartupDisabledByPolicyText {
+            get {
+                return ResourceManager.GetString("SettingsRunAtStartupDisabledByPolicyText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Turned off in Task Manager &gt; Startup apps. Turn it back on there first..
+        /// </summary>
+        public static string SettingsRunAtStartupDisabledByUserText {
+            get {
+                return ResourceManager.GetString("SettingsRunAtStartupDisabledByUserText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Turned on by your organization&apos;s policy..
+        /// </summary>
+        public static string SettingsRunAtStartupEnabledByPolicyText {
+            get {
+                return ResourceManager.GetString("SettingsRunAtStartupEnabledByPolicyText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EarTrumpet could not read or write the startup setting..
+        /// </summary>
+        public static string SettingsRunAtStartupUnavailableText {
+            get {
+                return ResourceManager.GetString("SettingsRunAtStartupUnavailableText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Startup.
+        /// </summary>
+        public static string StartupSettingsPageText {
+            get {
+                return ResourceManager.GetString("StartupSettingsPageText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Toggle mute.
         /// </summary>
         public static string ToggleMuteToolTip {
@@ -1699,5 +1787,131 @@ namespace EarTrumpet.Properties {
                 return ResourceManager.GetString("WindowsLegacyMenuText", resourceCulture);
             }
         }
+        /// <summary>
+        ///   Looks up a localized string similar to Devices with a remembered volume ({0}).
+        /// </summary>
+        public static string SettingsRememberedDevicesHeader {
+            get {
+                return ResourceManager.GetString("SettingsRememberedDevicesHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nothing recorded yet. Change the volume on a Bluetooth device and it shows up here..
+        /// </summary>
+        public static string SettingsNoRememberedDevicesText {
+            get {
+                return ResourceManager.GetString("SettingsNoRememberedDevicesText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connected.
+        /// </summary>
+        public static string SettingsRememberedDeviceConnectedText {
+            get {
+                return ResourceManager.GetString("SettingsRememberedDeviceConnectedText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not connected.
+        /// </summary>
+        public static string SettingsRememberedDeviceDisconnectedText {
+            get {
+                return ResourceManager.GetString("SettingsRememberedDeviceDisconnectedText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown device.
+        /// </summary>
+        public static string SettingsRememberedDeviceUnknownNameText {
+            get {
+                return ResourceManager.GetString("SettingsRememberedDeviceUnknownNameText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last seen {0}.
+        /// </summary>
+        public static string SettingsRememberedDeviceLastRecordedFormat {
+            get {
+                return ResourceManager.GetString("SettingsRememberedDeviceLastRecordedFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to now {0}.
+        /// </summary>
+        public static string SettingsRememberedDeviceCurrentVolumeFormat {
+            get {
+                return ResourceManager.GetString("SettingsRememberedDeviceCurrentVolumeFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Endpoint id: {0} · Enumerator: {1}.
+        /// </summary>
+        public static string SettingsRememberedDeviceToolTipFormat {
+            get {
+                return ResourceManager.GetString("SettingsRememberedDeviceToolTipFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bluetooth stereo (A2DP).
+        /// </summary>
+        public static string BluetoothDeviceKindStereoText {
+            get {
+                return ResourceManager.GetString("BluetoothDeviceKindStereoText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bluetooth hands-free (HFP).
+        /// </summary>
+        public static string BluetoothDeviceKindHandsFreeText {
+            get {
+                return ResourceManager.GetString("BluetoothDeviceKindHandsFreeText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bluetooth LE Audio.
+        /// </summary>
+        public static string BluetoothDeviceKindLeAudioText {
+            get {
+                return ResourceManager.GetString("BluetoothDeviceKindLeAudioText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bluetooth audio.
+        /// </summary>
+        public static string BluetoothDeviceKindGenericText {
+            get {
+                return ResourceManager.GetString("BluetoothDeviceKindGenericText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to remembered {0}.
+        /// </summary>
+        public static string SettingsRememberedDeviceRememberedVolumeFormat {
+            get {
+                return ResourceManager.GetString("SettingsRememberedDeviceRememberedVolumeFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Forget this device.
+        /// </summary>
+        public static string SettingsRememberedDeviceForgetText {
+            get {
+                return ResourceManager.GetString("SettingsRememberedDeviceForgetText", resourceCulture);
+            }
+        }
+        
     }
 }

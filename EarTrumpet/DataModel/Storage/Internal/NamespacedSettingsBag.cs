@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EarTrumpet.DataModel.Storage.Internal
 {
@@ -31,6 +33,27 @@ namespace EarTrumpet.DataModel.Storage.Internal
         {
             _globalBag.Set($"{Namespace}{key}", value);
             SettingChanged?.Invoke(this, key);
+        }
+
+        public string GetRaw(string key)
+        {
+            return _globalBag.GetRaw($"{Namespace}{key}");
+        }
+
+        public void Remove(string key)
+        {
+            _globalBag.Remove($"{Namespace}{key}");
+            SettingChanged?.Invoke(this, key);
+        }
+
+        public IEnumerable<string> GetKeys()
+        {
+            // The shared bag holds every namespace side by side, so filter ours out and hand
+            // back the caller-visible keys (without the prefix).
+            return _globalBag.GetKeys()
+                .Where(key => key.StartsWith(Namespace, StringComparison.Ordinal))
+                .Select(key => key.Substring(Namespace.Length))
+                .ToArray();
         }
     }
 }

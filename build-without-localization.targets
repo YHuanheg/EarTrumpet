@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  降级用的目标文件:本机缺少 al.exe(.NET Framework SDK 工具里的程序集链接器)时使用。
+
+  al.exe 只在生成**附属程序集**时被调用 —— 即把 34 个 Properties\Resources.<语言>.resx
+  编成 zh-CN\EarTrumpet.resources.dll 这类文件。这个文件在构建早期就把"带语言后缀"的资源项摘掉:
+
+    * GenerateSatelliteAssemblies 的输入因此为空,它自带的条件直接跳过,不会再去找 al.exe;
+    * ComputeIntermediateSatelliteAssemblies 的条件同样依赖这些项,于是也不会留下
+      "待复制但不存在"的清单,避免后续复制步骤报 MSB3030。
+
+  代价:编出来的 exe 只带中性资源(英文界面)。仓库里的 .resx 一个都没改 ——
+  装上 .NET Framework 4.6.2 Developer Pack(自带 al.exe)后,不用这个文件即可恢复多语言。
+
+  末尾那几条 Message 是刻意留的:构建日志会列出实际参与编译的资源项,
+  一眼就能确认过滤是否生效。
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="DropLocalizedResources" BeforeTargets="AssignTargetPaths;PrepareResources">
+    <ItemGroup>
+      <!-- Properties\Resources.resx        -> Filename 为 "Resources"(无点)
+           Properties\Resources.zh-CN.resx  -> Filename 为 "Resources.zh-CN"(有点) -->
+      <EmbeddedResource Remove="@(EmbeddedResource)"
+                        Condition="$([System.String]::Copy('%(EmbeddedResource.Filename)').Contains('.'))" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="ReportLocalizationState" BeforeTargets="PrepareResources" DependsOnTargets="DropLocalizedResources">
+    <ItemGroup>
+      <_LeftoverCultureResx Include="@(EmbeddedResource)"
+                            Condition="$([System.String]::Copy('%(EmbeddedResource.Filename)').Contains('.'))" />
+    </ItemGroup>
+    <Message Importance="high" Text="[降级模式] 参与编译的资源项: @(EmbeddedResource->'%(Filename)', ' ')" />
+    <Message Importance="high" Condition="'@(_LeftoverCultureResx)' == ''"
+             Text="[降级模式] 过滤生效:只编译中性资源(界面为英文)。" />
+    <Message Importance="high" Condition="'@(_LeftoverCultureResx)' != ''"
+             Text="[降级模式] 警告:仍有 @(_LeftoverCultureResx->Count()) 项带语言后缀的资源参与编译,这一步可能仍会去找 al.exe。" />
+  </Target>
+
+</Project>
